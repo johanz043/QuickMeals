@@ -1,20 +1,37 @@
 # recipes.py
+# recipes.py
+# recipes.py
 import requests
 from collections import defaultdict
 
+def get_recipe_ingredients(meal_id):
+    url = f"https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}"
+    data = requests.get(url).json()
+
+    ingredients = []
+    meal = data["meals"][0]
+
+    for i in range(1, 21):
+        ing = meal.get(f"strIngredient{i}")
+        if ing and ing.strip():
+            ingredients.append(ing.lower())
+
+    return ingredients
+
+
 def get_recipes(ingredients):
     if not ingredients:
-        return ["No ingredients detected 😢"]
+        return []
 
     recipe_matches = defaultdict(int)
     recipe_name_map = {}
 
+    # Step 1: Find recipes with at least 1 matching ingredient
     for ing in ingredients:
         url = f"https://www.themealdb.com/api/json/v1/1/filter.php?i={ing}"
 
         try:
-            response = requests.get(url)
-            data = response.json()
+            data = requests.get(url).json()
 
             if data and data.get("meals"):
                 for meal in data["meals"]:
@@ -28,8 +45,27 @@ def get_recipes(ingredients):
             print(f"Error for {ing}: {e}")
 
     if not recipe_matches:
-        return ["No recipes found 😢"]
+        return []
 
-    sorted_recipes = sorted(recipe_matches.items(), key=lambda x: x[1], reverse=True)
+    # Step 2: Build detailed response
+    user_ingredients = set(i.lower() for i in ingredients)
+    results = []
 
-    return [recipe_name_map[r[0]] for r in sorted_recipes][:10]
+    for meal_id, match_count in recipe_matches.items():
+        recipe_ings = set(get_recipe_ingredients(meal_id))
+
+        matching = list(user_ingredients.intersection(recipe_ings))
+        missing = list(recipe_ings - user_ingredients)
+
+        results.append({
+            "id": meal_id,
+            "name": recipe_name_map[meal_id],
+            "match_count": match_count,
+            "matching_ingredients": matching,
+            "missing_ingredients": missing
+        })
+
+    # Step 3: Sort by best matches
+    results.sort(key=lambda x: x["match_count"], reverse=True)
+
+    return results[:10]

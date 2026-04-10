@@ -2,176 +2,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Fridge Scanner</title>
-
-    <!-- Mobile scaling -->
+    <title>QuickMeals</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <style>
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f7f7fb;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        body { margin:0; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:#f7f7fb; display:flex; flex-direction:column; align-items:center; }
+        .app { width:100%; max-width:420px; min-height:100vh; background:#fff; display:flex; flex-direction:column; }
+        .header { padding:20px; font-size:22px; font-weight:bold; text-align:center; background:white; border-bottom:1px solid #eee; }
+        .content { flex:1; padding:20px; overflow-y:auto; }
 
-        /* App container */
-        .app {
-            width: 100%;
-            max-width: 420px;
-            min-height: 100vh;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-        }
+        .card { background:#fff; border-radius:20px; padding:15px; margin-bottom:20px; box-shadow:0 6px 20px rgba(0,0,0,0.05); animation:fadeIn 0.5s ease; }
+        .upload-btn { display:block; text-align:center; background:linear-gradient(135deg, #ff7eb3, #6c63ff); color:white; padding:15px; border-radius:30px; font-size:16px; cursor:pointer; margin-top:10px; }
+        .upload-btn input { display:none; }
 
-        /* Header */
-        .header {
-            padding: 20px;
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-            background: white;
-            border-bottom: 1px solid #eee;
-        }
+        button { width:100%; margin-top:10px; padding:14px; border:none; border-radius:30px; font-size:16px; }
+        #scanBtn:disabled { background:#ccc; cursor:not-allowed; }
+        #scanBtn:enabled { background:#6c63ff; color:white; cursor:pointer; }
 
-        /* Content */
-        .content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
+        img { width:100%; border-radius:15px; margin-top:10px; }
+        ul { padding:0; list-style:none; }
+        li { background:#f1f3ff; padding:10px; margin:8px 0; border-radius:12px; }
 
-        /* Card style */
-        .card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-            animation: fadeIn 0.5s ease;
-        }
+        .recipe-card { cursor:pointer; transition:background 0.2s ease; margin-bottom:15px; }
+        .recipe-card:hover { background:#f5f5ff; }
+        .recipe-details { display:none; margin-top:10px; }
 
-        /* Upload button */
-        .upload-btn {
-            display: block;
-            text-align: center;
-            background: linear-gradient(135deg, #ff7eb3, #6c63ff);
-            color: white;
-            padding: 15px;
-            border-radius: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+        .nav { display:flex; justify-content:space-around; padding:10px; border-top:1px solid #eee; background:white; }
+        .nav div { font-size:14px; color:#888; }
+        .nav .active { color:#6c63ff; font-weight:bold; }
 
-        .upload-btn input {
-            display: none;
-        }
+        .loader { border:4px solid #f3f3f3; border-top:4px solid #6c63ff; border-radius:50%; width:30px; height:30px; animation:spin 1s linear infinite; margin:15px auto; }
 
-        button {
-            width: 100%;
-            margin-top: 10px;
-            padding: 14px;
-            border: none;
-            border-radius: 30px;
-            background: #6c63ff;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        img {
-            width: 100%;
-            border-radius: 15px;
-            margin-top: 10px;
-        }
-
-        ul {
-            padding: 0;
-            list-style: none;
-        }
-
-        li {
-            background: #f1f3ff;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 12px;
-        }
-
-        /* Bottom nav */
-        .nav {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px;
-            border-top: 1px solid #eee;
-            background: white;
-        }
-
-        .nav div {
-            font-size: 14px;
-            color: #888;
-        }
-
-        .nav .active {
-            color: #6c63ff;
-            font-weight: bold;
-        }
-
-        /* Loading spinner */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #6c63ff;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 15px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
     </style>
 </head>
-
 <body>
 <div class="app">
 
-    <!-- Header -->
-    <div class="header">🥕 Fridge Scanner</div>
+    <div class="header">QuickMeals 🍓</div>
 
-    <!-- Content -->
     <div class="content">
 
-        <!-- Upload -->
         <div class="card">
             <form method="POST" enctype="multipart/form-data" onsubmit="showLoader()">
-                
                 <label class="upload-btn">
                     📸 Take / Upload Photo
-                    <input type="file" name="image" accept="image/*" capture="environment">
+                    <input type="file" id="imageInput" name="image" accept="image/*" capture="environment">
                 </label>
 
-                <button type="submit">Scan Ingredients</button>
+                <!-- Disabled by default -->
+                <button type="submit" id="scanBtn" disabled>
+                    Scan Ingredients
+                </button>
             </form>
 
-            <!-- Loading -->
             <div id="loading" style="display:none;">
                 <div class="loader"></div>
                 <p style="text-align:center;">Scanning your fridge...</p>
             </div>
         </div>
 
-        <!-- Image -->
         {% if image %}
         <div class="card">
             <h3>📷 Your Image</h3>
@@ -179,7 +69,6 @@
         </div>
         {% endif %}
 
-        <!-- Ingredients -->
         {% if ingredients %}
         <div class="card">
             <h3>🥦 Ingredients</h3>
@@ -191,26 +80,38 @@
         </div>
         {% endif %}
 
-        <!-- Recipes -->
         {% if recipes %}
         <div class="card">
             <h3>🍳 Recipes</h3>
-            <ul>
-                {% for recipe in recipes %}
-                    <li>{{ recipe }}</li>
-                {% endfor %}
-            </ul>
+            {% for recipe in recipes %}
+            <div class="recipe-card" onclick="toggleDetails(this)">
+                <div class="recipe-header">
+                    <strong>{{ recipe.name }}</strong><br>
+                    ✅ {{ recipe.match_count }} ingredients matched  
+                    🔥 {{ recipe.score }}%
+                </div>
+                <div class="recipe-details">
+                    <p><strong>✅ You have:</strong></p>
+                    <ul>
+                        {% for item in recipe.matching_ingredients %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <p><strong>❌ Missing:</strong></p>
+                    <ul>
+                        {% for item in recipe.missing_ingredients %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
         </div>
         {% endif %}
 
     </div>
 
-    <!-- Bottom Nav -->
-    <div class="nav">
-        <div class="active">🏠 Home</div>
-        <div>📋 History</div>
-        <div>⚙️ Settings</div>
-    </div>
 
 </div>
 
@@ -218,6 +119,24 @@
 function showLoader() {
     document.getElementById("loading").style.display = "block";
 }
+
+function toggleDetails(card) {
+    const details = card.querySelector('.recipe-details');
+    card.classList.toggle("expanded");
+    details.style.display = details.style.display === "block" ? "none" : "block";
+}
+
+// Enable button when image is selected
+const imageInput = document.getElementById("imageInput");
+const scanBtn = document.getElementById("scanBtn");
+
+imageInput.addEventListener("change", function() {
+    if (imageInput.files.length > 0) {
+        scanBtn.disabled = false;
+    } else {
+        scanBtn.disabled = true;
+    }
+});
 </script>
 
 </body>
