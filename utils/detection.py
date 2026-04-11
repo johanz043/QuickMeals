@@ -1,28 +1,34 @@
 # utils/detection.py (YOLOv8)
-from ultralytics import YOLO
+from transformers import pipeline
+from PIL import Image
 
-# Load YOLO model once
-model = YOLO("yolov8n.pt")
+# Load free food classifier (downloads once, then cached)
+classifier = pipeline(
+    "image-classification",
+    model="nateraw/food"
+)
 
 def detect_food(image_path):
     """
-    Detect objects in an image using YOLOv8.
-    Returns a list of detected food/objects.
+    Detect food items using a pretrained Food-101 model.
+    Returns a cleaned list of ingredients.
     """
-    results = model(image_path)
+
+    image = Image.open(image_path)
+
+    results = classifier(image)
 
     ingredients = []
 
     for r in results:
-        for box in r.boxes:
-            cls_id = int(box.cls[0])
-            label = model.names[cls_id]
-            ingredients.append(label)
+        label = r["label"].lower()
 
-    # Remove duplicates
+        # clean label (Food-101 sometimes returns messy names)
+        label = label.replace("_", " ")
+
+        ingredients.append(label)
+
+    # remove duplicates
     ingredients = list(set(ingredients))
 
-    if not ingredients:
-        return ["No food detected 😢"]
-
-    return ingredients
+    return ingredients if ingredients else ["unknown food"]
