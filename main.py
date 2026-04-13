@@ -1,4 +1,3 @@
-# main.py
 from flask import Flask, render_template, request
 import os
 from utils.detection import detect_food
@@ -7,6 +6,7 @@ from utils.recipes import get_recipes
 app = Flask(__name__)
 
 UPLOAD_FOLDER = "static/uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
@@ -25,10 +25,7 @@ def index():
 
             image = filepath
 
-            # AI detection
             ingredients = detect_food(filepath)
-
-            # Recipe matching
             recipes = get_recipes(ingredients)
 
     return render_template(
@@ -40,4 +37,5 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
