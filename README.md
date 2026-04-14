@@ -1,5 +1,5 @@
 # QuickMeals
-AI app which returns recipes depending on the items in your fridge!
+QuickMeals is an AI-powered web application that detects ingredients from an image of your fridge or food items and generates possible recipes based on what you have!
 
 Due to heavy AI dependencies (PyTorch + Transformers), this application cannot be reliably deployed on free hosting platforms such as Vercel or Render.
 To use QuickMeals, you must run it locally on your machine.
