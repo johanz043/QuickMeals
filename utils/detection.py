@@ -1,4 +1,4 @@
-# utils/detection.py (YOLOv8)
+# utils/detection.py
 from transformers import pipeline
 from PIL import Image
 
