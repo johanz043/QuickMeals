@@ -1,7 +1,7 @@
 # QuickMeals
-QuickMeals is an AI-powered web application that detects ingredients from an image of your fridge or food items and generates possible recipes based on what you have!
+QuickMeals is an **AI-powered** web application that detects ingredients from an image of your fridge or food items and generates possible recipes based on what you have!
 
-QuickMeals is built using a modern full-stack technology stack that combines Flask and Python for the backend, enabling a lightweight and efficient web application structure. It uses Hugging Face Transformers and PyTorch for AI-powered food image recognition, allowing the system to detect ingredients from uploaded images. The application integrates TheMealDB API to retrieve and generate recipe recommendations based on the detected ingredients, while HTML, CSS, and JavaScript are used to create a clean and interactive user interface for a smooth user experience.
+QuickMeals is built using a modern full-stack technology stack that combines **Flask** and **Python** for the backend, enabling a lightweight and efficient web application structure. It uses **Hugging Face Transformers** and **PyTorch** for AI-powered food image recognition, allowing the system to detect ingredients from uploaded images. The application integrates **TheMealDB API** to retrieve and generate recipe recommendations based on the detected ingredients, while **HTML**, **CSS**, and **JavaScript** are used to create a clean and interactive user interface for a smooth user experience.
 
 
 Due to heavy AI dependencies (PyTorch + Transformers), this application cannot be reliably deployed on free hosting platforms such as Vercel or Render.
@@ -12,7 +12,7 @@ Before running the app, you must install:
 - pip
 - virtualenv
 
-### Installation steps
+## Installation steps
 
 #### 1. Clone the repository
 Paste:
