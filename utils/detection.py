@@ -2,35 +2,33 @@
 from transformers import pipeline
 from PIL import Image
 
-classifier = None
-
-def get_classifier():
-    global classifier
-    if classifier is None:
-        print("Loading food classifier...")
-        classifier = pipeline(
-            "image-classification",
-            model="nateraw/food"
-        )
-    return classifier
-
+# Load free food classifier (downloads once, then cached)
+classifier = pipeline(
+    "image-classification",
+    model="nateraw/food"
+)
 
 def detect_food(image_path):
-    try:
-        clf = get_classifier()
+    """
+    Detect food items using a pretrained Food-101 model.
+    Returns a cleaned list of ingredients.
+    """
 
-        image = Image.open(image_path)
-        results = clf(image)
+    image = Image.open(image_path)
 
-        ingredients = []
-        for r in results:
-            label = r["label"].lower().replace("_", " ")
-            ingredients.append(label)
+    results = classifier(image)
 
-        ingredients = list(set(ingredients))
-        return ingredients if ingredients else ["unknown food"]
+    ingredients = []
 
-    except Exception as e:
-        print("Detection failed:", e)
+    for r in results:
+        label = r["label"].lower()
 
-        return ["Render can't handle my detection code, but trust me it works"]
+        # clean label (Food-101 sometimes returns messy names)
+        label = label.replace("_", " ")
+
+        ingredients.append(label)
+
+    # remove duplicates
+    ingredients = list(set(ingredients))
+
+    return ingredients if ingredients else ["unknown food"]
