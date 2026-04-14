@@ -14,7 +14,7 @@ Before running the app, you must install:
 #### 1. Clone the repository
 Paste:
 
-git clone https://github.com/your-username/quickmeals.git
+git clone [https://github.com/your-username/quickmeals.git](https://github.com/johanz043/QuickMeals.git)
 
 In your local terminal (I use windows powershell). Put it into your local files.
 
