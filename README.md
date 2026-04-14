@@ -20,14 +20,18 @@ in your local terminal (I use windows powershell). Put it into your local files.
 
 #### 2. Create virtual environment
 Paste the following into your terminal (this is for windows)
+```bash
 python -m venv venv
 .\venv\Scripts\Activate.ps1
-
+```
 #### 3. Install dependencies
+Paste this in your terminal
+```bash
 pip install -r requirements.txt
-
+```
 #### 4. Run the application
+```bash
 python main.py
-
+```
 The url should appear in the terminal. Just copy and paste it into your web browser.
 Should look a bit like this: http://127.0.0.1:5000
