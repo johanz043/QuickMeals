@@ -2,11 +2,18 @@
 from transformers import pipeline
 from PIL import Image
 
-# Load free food classifier (downloads once, then cached)
-classifier = pipeline(
-    "image-classification",
-    model="nateraw/food"
-)
+classifier = None
+
+def get_classifier():
+    global classifier
+    if classifier is None:
+        print("Loading food classifier...")
+        classifier = pipeline(
+            "image-classification",
+            model="nateraw/food"
+        )
+    return classifier
+
 
 def detect_food(image_path):
     """
@@ -14,21 +21,18 @@ def detect_food(image_path):
     Returns a cleaned list of ingredients.
     """
 
-    image = Image.open(image_path)
+    clf = get_classifier()
 
-    results = classifier(image)
+    image = Image.open(image_path)
+    results = clf(image)
 
     ingredients = []
 
     for r in results:
         label = r["label"].lower()
-
-        # clean label (Food-101 sometimes returns messy names)
         label = label.replace("_", " ")
-
         ingredients.append(label)
 
-    # remove duplicates
     ingredients = list(set(ingredients))
 
     return ingredients if ingredients else ["unknown food"]
