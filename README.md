@@ -16,7 +16,7 @@ Paste:
 
 git clone [https://github.com/your-username/quickmeals.git](https://github.com/johanz043/QuickMeals.git)
 
-In your local terminal (I use windows powershell). Put it into your local files.
+in your local terminal (I use windows powershell). Put it into your local files.
 
 #### 2. Create virtual environment
 Paste the following into your terminal (this is for windows)
