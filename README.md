@@ -38,3 +38,6 @@ python main.py
 ```
 The url should appear in the terminal. Just copy and paste it into your web browser.
 Should look a bit like this: http://127.0.0.1:5000
+
+## Demo Video
+[Watch a runthrough](https://www.loom.com/share/6004292c43674d3fa37a1e071ddf8c24)
