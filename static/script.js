@@ -8,7 +8,6 @@ function toggleDetails(card) {
         details.style.display === "block" ? "none" : "block";
 }
 
-// Enable scan button only when image is selected
 document.addEventListener("DOMContentLoaded", function () {
     const imageInput = document.getElementById("imageInput");
     const scanBtn = document.getElementById("scanBtn");
